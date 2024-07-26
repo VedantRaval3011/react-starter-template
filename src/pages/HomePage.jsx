@@ -3,7 +3,7 @@ import HomeComponent from "../Components/HomeComponent";
 
 const HomePage = () => {
   return (
-    <div>
+    <div className="">
       Home Page
       <HomeComponent />
     </div>
