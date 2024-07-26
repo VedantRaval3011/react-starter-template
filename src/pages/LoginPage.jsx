@@ -8,17 +8,16 @@ const LoginPage = () => {
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    // console.log(email, password);
     e.preventDefault();
     try {
       const response = await axios.post("http://localhost:5000/api/login", {
         email,
         password,
       });
-      const user = response.data;
-      localStorage.setItem("token", response.data.token);
-      localStorage.setItem("userId", user.id);
-      navigate(`/profile/${user.id}`);
+      const { token, user } = response.data;
+      localStorage.setItem("token", token);
+      localStorage.setItem("userId", user._id); // Assuming the user object has an _id field
+      navigate(`/profile/${user._id}`);
     } catch (error) {
       console.error(error);
     }
