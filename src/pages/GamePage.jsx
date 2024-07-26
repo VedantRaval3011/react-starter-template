@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 
-const operators = ['+', '-', 'x', '/'];
+const operators = ["+", "-", "x", "/"];
 
 const getRandomNumber = () => Math.floor(Math.random() * 10);
-const getRandomOperator = () => operators[Math.floor(Math.random() * operators.length)];
+const getRandomOperator = () =>
+  operators[Math.floor(Math.random() * operators.length)];
 
 const generateQuestion = () => {
   const num1 = getRandomNumber();
@@ -13,20 +14,20 @@ const generateQuestion = () => {
   let correctAnswer;
 
   switch (operator) {
-    case '+':
+    case "+":
       correctAnswer = num1 + num2;
       break;
-    case '-':
+    case "-":
       correctAnswer = num1 - num2;
       break;
-    case 'x':
+    case "x":
       correctAnswer = num1 * num2;
       break;
-    case '/':
-      correctAnswer = num2 !== 0 ? num1 / num2 : num1; // for avoidiing divison by zero
+    case "/":
+      correctAnswer = num2 !== 0 ? num1 / num2 : num1; // for avoiding division by zero
       break;
     default:
-      correctAnswer = num1;// for some other unexpected operaters
+      correctAnswer = num1; // for some other unexpected operators
       break;
   }
 
@@ -59,12 +60,16 @@ const GamePage = () => {
   const handleNextQuestion = useCallback(() => {
     if (questions.length === 0) return;
 
-    const isCorrect = selectedAnswer === questions[currentQuestion]?.correctAnswer;
-    setAnswers([...answers, {
-      question: questions[currentQuestion],
-      selectedAnswer,
-      isCorrect: !!isCorrect,
-    }]);
+    const isCorrect =
+      selectedAnswer === questions[currentQuestion]?.correctAnswer;
+    setAnswers([
+      ...answers,
+      {
+        question: questions[currentQuestion],
+        selectedAnswer,
+        isCorrect: !!isCorrect,
+      },
+    ]);
 
     setSelectedAnswer(null);
     setTimer(30);
@@ -76,7 +81,9 @@ const GamePage = () => {
     if (currentQuestion < 9) {
       setCurrentQuestion(currentQuestion + 1);
     } else {
-      navigate('/result', { state: { answers, score: score + (isCorrect ? 1 : 0) } });
+      navigate("/result", {
+        state: { answers, score: score + (isCorrect ? 1 : 0) },
+      });
     }
   }, [questions, currentQuestion, selectedAnswer, answers, score, navigate]);
 
@@ -84,12 +91,12 @@ const GamePage = () => {
     if (timer === 0) {
       handleNextQuestion();
     }
-    const interval = setInterval(() => setTimer(t => t - 1), 1000);
+    const interval = setInterval(() => setTimer((t) => t - 1), 1000);
     return () => clearInterval(interval);
   }, [timer, handleNextQuestion]);
 
   const generateOptions = useCallback(() => {
-    if (questions.length === 0) return []; 
+    if (questions.length === 0) return [];
 
     const correctAnswer = questions[currentQuestion]?.correctAnswer;
     const options = [correctAnswer];
@@ -104,31 +111,51 @@ const GamePage = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
-      <h1 className="text-2xl font-semibold mb-4">Question {currentQuestion + 1} / 10</h1>
-      {questions.length > 0 && (
-        <>
-          <p className="text-xl mb-4">{questions[currentQuestion]?.num1} {questions[currentQuestion]?.operator} {questions[currentQuestion]?.num2}</p>
-          <div className="grid grid-cols-2 gap-4 mb-4">
-            {options.map((answer, index) => (
-              <button
-                key={index}
-                onClick={() => setSelectedAnswer(answer)}
-                className={`px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-lg hover:bg-blue-600 transition duration-300 ${selectedAnswer === answer ? 'bg-blue-700' : ''}`}
-              >
-                {answer}
-              </button>
-            ))}
-          </div>
-          <p className="text-lg mb-4">Time left: {timer}s</p>
-          <button
-            onClick={handleNextQuestion}
-            disabled={timer === 0 || selectedAnswer === null}
-            className={`px-6 py-3 bg-green-500 text-white font-semibold rounded-lg shadow-lg hover:bg-green-600 transition duration-300 ${timer === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
-          >
-            Next
-          </button>
-        </>
-      )}
+      <div className="max-w-md w-full p-8 bg-white  backdrop-filter rounded-xl shadow-lg mt-16 flex flex-col justify-center items-center">
+        <h1 className="text-2xl font-semibold mb-4">
+          Question {currentQuestion + 1} / 10
+        </h1>
+        {questions.length > 0 && (
+          <>
+            <div className="text-xl mb-4">
+              <input
+                type="text"
+                readOnly
+                value={questions[currentQuestion]?.num1}
+                className="border p-2 rounded w-16 text-center"
+              />{" "}
+              {questions[currentQuestion]?.operator}{" "}
+              <input
+                type="text"
+                readOnly
+                value={questions[currentQuestion]?.num2}
+                className="border p-2 rounded w-16 text-center"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              {options.map((answer, index) => (
+                <button
+                  key={index}
+                  onClick={() => setSelectedAnswer(answer)}
+                  className={`px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-lg hover:bg-blue-600 transition duration-300 ${
+                    selectedAnswer === answer ? "bg-blue-700" : ""
+                  }`}>
+                  {answer}
+                </button>
+              ))}
+            </div>
+            <p className="text-lg mb-4">Time left: {timer}s</p>
+            <button
+              onClick={handleNextQuestion}
+              disabled={timer === 0 || selectedAnswer === null}
+              className={`px-6 py-3 bg-green-500 text-white font-semibold rounded-lg shadow-lg hover:bg-green-600 transition duration-300 ${
+                timer === 0 ? "opacity-50 cursor-not-allowed" : ""
+              }`}>
+              Next
+            </button>
+          </>
+        )}
+      </div>
     </div>
   );
 };
