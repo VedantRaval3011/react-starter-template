@@ -1,38 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import useLogout from '../services/useLogout';
-const operators = ["+", "-", "x", "/"];
-
-const getRandomNumber = () => Math.floor(Math.random() * 10);
-const getRandomOperator = () =>
-  operators[Math.floor(Math.random() * operators.length)];
-
-const generateQuestion = () => {
-  const num1 = getRandomNumber();
-  const num2 = getRandomNumber();
-  const operator = getRandomOperator();
-  let correctAnswer;
-
-  switch (operator) {
-    case "+":
-      correctAnswer = num1 + num2;
-      break;
-    case "-":
-      correctAnswer = num1 - num2;
-      break;
-    case "x":
-      correctAnswer = num1 * num2;
-      break;
-    case "/":
-      correctAnswer = num2 !== 0 ? num1 / num2 : num1; // for avoiding division by zero
-      break;
-    default:
-      correctAnswer = num1; // for some other unexpected operators
-      break;
-  }
-
-  return { num1, num2, operator, correctAnswer: correctAnswer.toFixed(2) };
-};
+import { generateQuestion, generateOptions } from '../utils/questionUtils';
 
 const GamePage = () => {
   const [questions, setQuestions] = useState([]);
@@ -54,15 +23,14 @@ const GamePage = () => {
   useEffect(() => {
     if (questions.length === 0) return;
 
-    const newOptions = generateOptions();
+    const newOptions = generateOptions(questions[currentQuestion]?.correctAnswer, currentQuestion, questions);
     setOptions(newOptions);
   }, [currentQuestion, questions]);
 
   const handleNextQuestion = useCallback(() => {
     if (questions.length === 0) return;
 
-    const isCorrect =
-      selectedAnswer === questions[currentQuestion]?.correctAnswer;
+    const isCorrect = selectedAnswer === questions[currentQuestion]?.correctAnswer;
     setAnswers([
       ...answers,
       {
@@ -95,20 +63,6 @@ const GamePage = () => {
     const interval = setInterval(() => setTimer((t) => t - 1), 1000);
     return () => clearInterval(interval);
   }, [timer, handleNextQuestion]);
-
-  const generateOptions = useCallback(() => {
-    if (questions.length === 0) return [];
-
-    const correctAnswer = questions[currentQuestion]?.correctAnswer;
-    const options = [correctAnswer];
-    while (options.length < 4) {
-      const wrongAnswer = (getRandomNumber() * getRandomNumber()).toFixed(2);
-      if (!options.includes(wrongAnswer)) {
-        options.push(wrongAnswer);
-      }
-    }
-    return options.sort(() => Math.random() - 0.5);
-  }, [currentQuestion, questions]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
