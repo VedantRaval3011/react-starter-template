@@ -23,7 +23,7 @@ const LoginPage = () => {
     }
   };
   return (
-    <div className="min-h-screen bg-gradient-to-tr flex bg-pink-50 items-center justify-center">
+    <div className="min-h-screen bg-gradient-to-tr flex bg-gray-100 items-center justify-center">
       <div className="max-w-md w-full p-8 bg-white  backdrop-filter rounded-xl shadow-lg mt-16">
         <h2 className="text-2xl font-bold mb-5 bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent text-center">
           Login
