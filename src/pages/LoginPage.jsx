@@ -56,6 +56,16 @@ const LoginPage = () => {
             className="w-full py-2 px-4 bg-blue-500 text-white rounded-md">
             Login
           </button>
+          <p className="text-center text-sm mt-4">
+            You don't have an account?{" "}
+            <button
+              type="button"
+              className="text-blue-500 hover:underline"
+              onClick={() => navigate('/signup')}
+            >
+              Sign up
+            </button>
+          </p>
         </form>
       </div>
     </div>

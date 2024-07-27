@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-
+import useLogout from '../services/useLogout';
 const operators = ["+", "-", "x", "/"];
 
 const getRandomNumber = () => Math.floor(Math.random() * 10);
@@ -43,6 +43,7 @@ const GamePage = () => {
   const [answers, setAnswers] = useState([]);
   const [options, setOptions] = useState([]);
   const navigate = useNavigate();
+  const logout = useLogout();
 
   useEffect(() => {
     const generatedQuestions = Array.from({ length: 10 }, generateQuestion);
@@ -111,6 +112,12 @@ const GamePage = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
+      <button
+          onClick={logout}
+          className="py-2 px-4 bg-red-500 text-white rounded-md mt-4"
+        >
+          Logout
+        </button>
       <div className="max-w-md w-full p-8 bg-white  backdrop-filter rounded-xl shadow-lg mt-16 flex flex-col justify-center items-center">
         <h1 className="text-2xl font-semibold mb-4">
           Question {currentQuestion + 1} / 10
